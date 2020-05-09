@@ -51,12 +51,12 @@ class Callback extends Api
         {
             return false;
         } 
-    } 
+    }  
     
     public function enable_bot($group_id, $server_id){
         return $this->CallHowGroup('groups.setCallbackSettings', 
                                         ["group_id"=>$group_id, "server_id"=>$server_id, "api_version"=>"5.103",
                                         "message_new"=>1, "message_reply"=>1, "message_allow"=>1,
-                                        "message_typing_state"=>1]);
+                                        "message_typing_state"=>1])['response'];
     }
 }
