@@ -25,7 +25,6 @@ class Callback extends Api
     }
     
     public function set_webhook($url){
-        var_dump($this->callApi("set_webhook", array("url"=>$url)));
-        die();
+        return $this->callApi("set_webhook", array("url"=>$url));
     }
 }
