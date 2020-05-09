@@ -32,6 +32,25 @@ class Api{
     	return json_decode($data,true);
 
     }
+    
+    function provider($link, $param, $flag){
+      usleep(334000);
+    	$ch = curl_init();
+    	curl_setopt($ch, CURLOPT_URL, $link);
+    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    	curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    	curl_setopt($ch, CURLOPT_POST, $flag);
+    	curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    	curl_setopt ($ch, CURLOPT_USERAGENT, 'Lichi-social');
+    	curl_setopt ($ch, CURLOPT_HTTPHEADER, array('Expect:'));
+    	curl_setopt($ch, CURLOPT_POSTFIELDS, $param);
+    	$data = curl_exec($ch);
+    	curl_close($ch);
+    	return json_decode($data,true);
+    }
+    
+    
 
     function CallHowGroup($method,$param){
         $param['access_token']= $this->token_group;

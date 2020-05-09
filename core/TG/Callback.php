@@ -42,7 +42,6 @@ class Callback extends Api
     }
     
     public function set_webhook($url){
-        var_dump($this->curl("https://api.telegram.org/bot{$this->token}/setWebhook", array("url"=>$url)));
-        die();
+        return $this->curl("https://api.telegram.org/bot{$this->token}/setWebhook", array("url"=>$url));
     }
 }

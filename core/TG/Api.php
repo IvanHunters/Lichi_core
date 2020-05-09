@@ -21,7 +21,6 @@ class Api{
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($param));
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     	$data = curl_exec($ch);
-    	die($data);
     	curl_close($ch);
     	return $data;
     }
