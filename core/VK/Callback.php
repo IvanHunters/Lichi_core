@@ -13,7 +13,6 @@ class Callback extends Api
         header("Content-Length: {$size}");
         header("Connection: close");
         ob_end_flush();
-        ob_flush();
         flush();
         if (function_exists('fastcgi_finish_request'))  fastcgi_finish_request();
         if(session_id()) session_write_close();
