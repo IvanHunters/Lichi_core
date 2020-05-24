@@ -1,17 +1,23 @@
 <?php
-namespace Lichi\TG;
+namespace Lichi\FB;
 
-trait Photo{
+trait Document
+{
+    public function upload_file($file, $type){
 
-    public function upload_photo($file)
-    {
-      $this->type_upload = "photo";
+        if(preg_match("/http|www/", $file)){
+            preg_match("/[^.]+$/", $file, $ext);
+            $time_unix = time();
+            $new_file = "{$time_unix}.{$ext[0]}";
+            file_put_contents($new_file, file_get_contents($file));
+            $file = $new_file;
+        }
 
-      return $file;
+        $this->file_upload = $file;
+        $this->type_upload = $type;
     }
 
-    public function photo_send($post_fields)
-    {
+    public function document_send($post_fields){
         $post_fields['caption'] = $post_fields['text'];
         unset($post_fields['text']);
 
@@ -27,6 +33,8 @@ trait Photo{
         curl_setopt ($ch, CURLOPT_PROXY, $this->proxy);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
         $output = curl_exec($ch);
+
+        if(file_exists($this->files_upload))  unlink($this->files_upload);
 
         $this->files_upload = false;
         unset($this->type_upload);

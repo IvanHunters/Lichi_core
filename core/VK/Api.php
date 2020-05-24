@@ -3,7 +3,7 @@ namespace Lichi\VK;
 
 class Api{
     use Message, Keyboard, Photo, Document;
-    
+
     protected $token_user, $token_group, $messages;
 
     public function __construct($config) {
@@ -11,7 +11,6 @@ class Api{
         $this->token_user       = $config["VK_TOKEN_USER"];
         $this->confirm_token    = @$config["VK_TOKEN_CONFIRM"]? $config["VK_TOKEN_CONFIRM"]: false;
         $this->secret_key       = @$config["VK_SECRET_KEY"]? $config["VK_SECRET_KEY"]: false;
-        $this->random_id        = rand(1, 99999999);
     }
 
     function curl($link, $param, $flag=false){
@@ -32,8 +31,9 @@ class Api{
     	return json_decode($data,true);
 
     }
-    
+
     function provider($link, $param, $flag){
+      $param = json_decode($param, true);
       usleep(334000);
     	$ch = curl_init();
     	curl_setopt($ch, CURLOPT_URL, $link);
@@ -49,8 +49,8 @@ class Api{
     	curl_close($ch);
     	return json_decode($data,true);
     }
-    
-    
+
+
 
     function CallHowGroup($method,$param){
         $param['access_token']= $this->token_group;

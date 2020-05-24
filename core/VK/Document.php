@@ -4,12 +4,12 @@ namespace Lichi\VK;
 trait Document
 {
 
-  public function document_upload($file, $params, $flag_user = true){
+  public function upload_document($file, $flag_user = true){
 
     if($flag_user) $method = "CallHowGroup";
     else       $method = "CallHowUser";
 
-    $upload_url = $this->{$method}("docs.getMessagesUploadServer", $params)['response']['upload_url'];
+    $upload_url = $this->{$method}("docs.getMessagesUploadServer", array('type'=>'doc', 'peer_id'=>$this->user_id))['response']['upload_url'];
     $aPost = array(
         'file' => new \CURLFile($file)
     );

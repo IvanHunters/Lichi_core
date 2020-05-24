@@ -17,7 +17,8 @@
         "psr-4": {
             "Lichi\\VK\\": "core/VK/",
             "Lichi\\TG\\": "core/TG/",
-            "Lichi\\VB\\": "core/VB/"
+            "Lichi\\VB\\": "core/VB/",
+            "Lichi\\ICQ\\": "core/ICQ/"
         }
     }
 }

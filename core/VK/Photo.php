@@ -3,7 +3,7 @@ namespace Lichi\VK;
 
 trait Photo{
 
-    public function upload_in_message($file, $flag_user = true){
+    public function upload_photo($file, $flag_user = true){
 
         if($flag_user) $method = "CallHowGroup";
         else       $method = "CallHowUser";

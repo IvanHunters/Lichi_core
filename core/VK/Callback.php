@@ -17,12 +17,12 @@ class Callback extends Api
         if (function_exists('fastcgi_finish_request'))  fastcgi_finish_request();
         if(session_id()) session_write_close();
     }
-    
+
     public function handler($callback){
         $this->data = $data = json_decode(file_get_contents('php://input'));
         if($data->type == "confirmation")   $this->response(false);
         else $this->response();
-        
+
         $this->secret_key_request  = @$this->data->secret;
         if($this->secret_key && $this->secret_key_request != $this->secret_key) return false;
         $this->type_event   = $this->data->type;
@@ -33,30 +33,51 @@ class Callback extends Api
         $this->group_id     = @$data->group_id;
         $this->message_id   = @$data->object->message->id;
         $this->text         = @$data->object->message->text;
+        $this->is_ref       = false;
+        if(isset($this->object->message->ref))
+        {
+          $this->is_ref = true;
+          $this->ref = $this->object->message->ref != ''? $this->object->message->ref : 'none';
+        }
         $this->text_lower   = @preg_replace("/\[(.*)\]\s/","",mb_strtolower($this->text));
         $this->publish_date = @$data->object->message->date;
-	    
+
         $callback($this);
     }
-    
-    public function set_webhook($url, $secret_key){
+
+    public function get_connect_data(){
         $group_id = $this->CallHowGroup('groups.getById', ['']);
         if(isset($group_id['response'])){
             $group_id = $group_id['response'][0]['id'];
-            $server_id = $this->CallHowGroup('groups.addCallbackServer', ["url"=>$url, "title"=>"Lichi", 'group_id'=>$group_id, 'secret_key'=>$secret_key])['response']['server_id'];
             $code_connect = $this->CallHowGroup('groups.getCallbackConfirmationCode', ["group_id"=>$group_id])['response']['code'];
-            return ['group_id'=>$group_id, 'server_id'=>$server_id, 'code_connect'=>$code_connect];
+            return ['group_id'=>$group_id, 'code_connect'=>$code_connect];
         }
         else
         {
             return false;
-        } 
-    }  
-    
-    public function enable_bot($group_id, $server_id){
-        return $this->CallHowGroup('groups.setCallbackSettings', 
-                                        ["group_id"=>$group_id, "server_id"=>$server_id, "api_version"=>"5.103",
-                                        "message_new"=>1, "message_reply"=>1, "message_allow"=>1,
-                                        "message_typing_state"=>1])['response'];
+        }
+    }
+
+    public function set_webhook($url, $secret_key, $group_id){
+        $server_id = $this->CallHowGroup('groups.addCallbackServer', ["url"=>$url, "title"=>"Lichi", 'group_id'=>$group_id, 'secret_key'=>$secret_key]);
+        if(!isset($server_id['response']))
+          return false;
+        $server_id = $server_id['response']['server_id'];
+        $this->CallHowGroup('groups.setCallbackSettings',
+                                        [ "group_id"=>$group_id, "server_id"=>$server_id, "api_version"=>"5.103",
+                                          "message_new"=>1, "message_reply"=>1, "message_allow"=>1,
+                                          "message_typing_state"=>1]);
+        return $server_id;
+    }
+
+    public function delete_webhook($server_id){
+      $group_id = $this->CallHowGroup('groups.getById', ['']);
+      if(isset($group_id['response'])){
+          $group_id = $group_id['response'][0]['id'];
+      }
+      var_dump('---------------');
+      return $this->CallHowGroup('groups.deleteCallbackServer',
+                                      [ "group_id"=>$group_id,
+                                        "server_id"=>$server_id ]);
     }
 }

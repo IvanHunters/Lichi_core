@@ -7,7 +7,7 @@ trait Keyboard
   protected $active_color = ["positive", "negative", "default", "primary"];
 
   public function keyboard_hide(){
-    
+
     return '{"buttons":[],"one_time":true}';
   }
 
