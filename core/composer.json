@@ -1,0 +1,23 @@
+{
+    "name": "lichi/core",
+    "type": "library",
+    "description": "Core for lichi Framework",
+    "keywords": ["Lichi","lichi"],
+    "homepage": "https://github.com/IvanHunters/Lichi_core",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ivan Okhotnikov",
+            "email": "ohotnikovivan@yandex.ru",
+            "homepage": "https://vk.com/id145567397",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Lichi\\VK\\": "core/VK/",
+            "Lichi\\TG\\": "core/TG/",
+            "Lichi\\VB\\": "core/VB/"
+        }
+    }
+}
