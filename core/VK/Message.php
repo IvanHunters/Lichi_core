@@ -8,9 +8,12 @@ trait Message
 
       if(is_array($message) || is_object($message)){
           $message = var_export($message, true);
+          if (mb_strlen($message) > 1000) {
+              $message = mb_strcut($message, 0, 1000);
+          }
       }
 
-      if(!isset($other_param['user_id'])){
+      if(!isset($other_param['user_id']) && !isset($other_param['peer_ids'])){
         $other_param['user_id'] = $this->user_id;
       }
 
@@ -20,22 +23,29 @@ trait Message
 
       $params = $other_param;
       $params['message'] = $message;
+
       $status = $flag_user ? $this->message_sendHowUser($params) : $this->message_sendHowGroup($params);
+
+      file_put_contents("123.json", json_encode($params) . "   " .json_encode($status));
       return $status;
   }
 
   protected function message_sendHowUser($params = false){
     if(!$params) return false;
 
-    $params['random_id'] = rand(1, 99999999);
+    $params['random_id'] = rand(435345345345983, 99999999999999999);
     return $this->CallHowUser("messages.send", $params);
   }
 
   protected function message_sendHowGroup($params = false){
     if(!$params) return false;
 
-    $params['random_id'] = rand(1, 99999999);
-    return $this->CallHowGroup("messages.send", $params);
+    $params['random_id'] = rand(1, 99999999999999999);
+    $params['dont_parse_links'] = 1;
+
+    //$params['reply_to'] = $this->message_id;
+      //file_put_contents("ttt.json", "messages.send, " . json_encode($params));
+    return  $this->CallHowGroup("messages.send", $params);
   }
 
 }

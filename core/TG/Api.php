@@ -7,18 +7,21 @@ class Api{
     protected $token, $proxy;
 
     public function __construct($config) {
+        $this->conf = $config;
         $this->token      = $config["TG_TOKEN"];
         $this->proxy       = $config["TG_PROXY"];
     }
 
-    public function curl($url,$param){
+    public function curl($url,$param=[]){
         usleep(334000);
     	$ch = curl_init();
     	curl_setopt($ch, CURLOPT_URL, $url);
     	curl_setopt($ch, CURLOPT_HEADER, false);
-  	  curl_setopt ($ch, CURLOPT_PROXY, $this->proxy);
+      if(!empty($this->proxy))
+  	   curl_setopt ($ch, CURLOPT_PROXY, $this->proxy);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-      curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($param));
+      if(count($param) > 0)
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($param));
       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     	$data = curl_exec($ch);
       if($data)
@@ -50,6 +53,21 @@ class Api{
         $url = "https://api.telegram.org/bot{$this->token}/{$method}";
         $return = $this->curl($url,$param);
         return $return;
+    }
+
+    public function getImage($image) {
+        return  "https://api.telegram.org/file/bot{$this->token}/".$this->callApi("getFile", ["file_id" => $image])['result']['file_path'];
+    }
+
+    public function CallHowGroup($method,$param){
+        $url = "https://api.telegram.org/bot{$this->token}/{$method}";
+        $return = $this->curl($url,$param);
+        return $return;
+    }
+
+    public function getUrlFile($file_id){
+      $file = $this->callApi('getFile', ['file_id' => $file_id]);
+      return "https://api.telegram.org/file/bot{$this->token}/{$file['result']['file_path']}";
     }
 }
 ?>

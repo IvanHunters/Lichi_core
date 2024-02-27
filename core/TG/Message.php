@@ -20,6 +20,7 @@ trait Message
         }
 
         $other_param['text'] = $message;
+        $other_param['parse_mode'] = 'html';
         $other_param['disable_web_page_preview'] = true;
         if(isset($other_param['attachment'])){
             switch($this->type_upload){
@@ -27,6 +28,11 @@ trait Message
                     $other_param['photo'] =  new \CURLFile($other_param['attachment']);
                     unset($other_param['attachment']);
                     $response = $this->photo_send($other_param);
+                break;
+                case 'video':
+                    $other_param['video'] =  new \CURLFile($other_param['attachment']);
+                    unset($other_param['attachment']);
+                    $response = $this->video_send($other_param);
                 break;
 
                 case 'file':
