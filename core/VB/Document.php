@@ -9,7 +9,6 @@ trait Document
             preg_match("/[^.]+$/", $file, $ext);
             $time_unix = time();
             $new_file = "{$time_unix}.{$ext[0]}";
-            file_put_contents($new_file, file_get_contents($file));
             $file = $new_file;
         }
         

@@ -2,3 +2,4 @@ vendor/
 index.php
 log
 php_errors.log
+.idea

@@ -57,7 +57,6 @@ trait Photo{
         curl_setopt ($ch, CURLOPT_PROXY, $this->proxy);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
         $output = curl_exec($ch);
-        file_put_contents("tg_test.json", $output);
 
         $this->files_upload = false;
         unset($this->type_upload);

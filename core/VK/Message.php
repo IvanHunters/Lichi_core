@@ -26,7 +26,6 @@ trait Message
 
       $status = $flag_user ? $this->message_sendHowUser($params) : $this->message_sendHowGroup($params);
 
-      file_put_contents("123.json", json_encode($params) . "   " .json_encode($status));
       return $status;
   }
 
@@ -44,7 +43,6 @@ trait Message
     $params['dont_parse_links'] = 1;
 
     //$params['reply_to'] = $this->message_id;
-      //file_put_contents("ttt.json", "messages.send, " . json_encode($params));
     return  $this->CallHowGroup("messages.send", $params);
   }
 
