@@ -34,9 +34,8 @@ trait Photo{
         {
           $upload_url = $upload_url['upload_url'];
         }else{
-            $errors = sprintf("params_for_getting_upload_server: %s\nupload_response: %s\nupload_url: %s\nresponse: %s", json_encode($params_photo, true), json_encode($uploadData, true), $upload_url, $upload_url);
-            //$this->upload_photo($file, $flag_user, $flag_person, ($retry+1), $errors);
-            throw new \RuntimeException($errors);
+            $errors[] = sprintf("params_for_getting_upload_server: %s\nupload_response: %s\nupload_url: %s\nresponse: %s", json_encode($params_photo, true), json_encode($uploadData, true), $upload_url, $upload_url);
+            $this->upload_photo($file, $flag_user, $flag_person, ($retry+1), $errors);
 //          while(!isset($upload_url)){
 //            $upload_url = $this->{$method}("photos.getMessagesUploadServer", $params_photo);
 //          }
