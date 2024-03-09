@@ -4,12 +4,17 @@ namespace Lichi\VK;
 trait Message
 {
 
-  public function message_send($message = "", $other_param = array(), $flag_user = false){
+  public function message_send($message = "", $other_param = array(), $flag_user = false)
+  {
 
       if(is_array($message) || is_object($message)){
           $message = var_export($message, true);
           if (mb_strlen($message) > 1000) {
-              $message = mb_strcut($message, 0, 1000);
+              $messages = str_split($message, 900);
+              foreach ($messages as $message) {
+                  $this->message_send($message, $other_param, $flag_user);
+              }
+              return null;
           }
       }
 
