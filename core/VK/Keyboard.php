@@ -54,6 +54,7 @@ trait Keyboard
   private function keyboard_assoc($value, $color = "primary", $label = false){
       if(!$label){
           if($value == "location") return ['action'=>['type'=>'location']];
+          elseif($value == "callback") return ['action'=>['type'=>'callback']];
           elseif($value == "vk_pay")	return  ['action'=>['type'=>'vkpay','hash'=>"action=transfer-to-group&group_id={$this->group_id}&aid=10"]];
           elseif(isset($value['type']) && $value['type'] == "link")	return  ['action'=>['type'=>'open_link','link'=>$value['link'],"label"=>$value['text']]];
           else return ['action'=>['type'=>'text','label'=>$value],'color'=>$color];
