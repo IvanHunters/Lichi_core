@@ -4,6 +4,10 @@ namespace Lichi\TG;
 class Callback extends Api
 {
     public $not_keyboard = false;
+    /**
+     * @var mixed
+     */
+    public $realData;
 
     function response($return = true){
 //
@@ -92,6 +96,8 @@ class Callback extends Api
                 $this->attachments_data['photo'][] = $this->attachments_data_last['photo'][0] = $photo;
             }
         }
+
+        $this->realData       = json_decode($req, true);
 
         $callback($this);
     }
