@@ -5,11 +5,6 @@ trait Photo{
 
     public function upload_photo($file, $flag_user = true, $flag_person = true, $retry = 0, $errors = []){
 
-
-        if ($retry > 3) {
-            throw new \RuntimeException(implode("\n", $errors));
-        }
-        
         if($flag_user) $method = "CallHowGroup";
         else       $method = "CallHowUser";
 
@@ -28,12 +23,7 @@ trait Photo{
         {
           $upload_url = $upload_url['upload_url'];
         }else{
-            $errors[] = sprintf("params_for_getting_upload_server: %s\nupload_response: %s\nupload_url: %s\nresponse: %s", json_encode($params_photo, true), json_encode($uploadData, true), $upload_url, $upload_url);
-            $this->upload_photo($file, $flag_user, $flag_person, ($retry+1), $errors);
-//          while(!isset($upload_url)){
-//            $upload_url = $this->{$method}("photos.getMessagesUploadServer", $params_photo);
-//          }
-//          $upload_url = $upload_url['upload_url'];
+            throw new \RuntimeException("Не смог получить ссылку на загрузку");
         }
 
         $aPost = array(
@@ -50,8 +40,7 @@ trait Photo{
         $res = json_decode($result, true);
 
         if (empty($res) || empty($res['photo'])) {
-            $errors[] = sprintf("params_for_getting_upload_server: %s\nupload_response: %s\nupload_url: %s\nresponse: %s", json_encode($params_photo, true), json_encode($uploadData, true), $upload_url, $result);
-            $this->upload_photo($file, $flag_user, $flag_person, ($retry+1), $errors);
+            throw new \RuntimeException("Не смог загрузить изображение");
         }
         curl_close($ch);
 
@@ -59,22 +48,14 @@ trait Photo{
         try {
             $attachment = $this->{$method}("photos.saveMessagesPhoto", array("photo" => $res['photo'], "server" => $res['server'], "hash" => $res['hash']));
         } catch (\Throwable $e) {
-            $errors = sprintf("params_for_getting_upload_server: %s\nupload_response: %s\nupload_url: %s\nresponse: %s", json_encode($params_photo, true), json_encode($uploadData, true), $upload_url, $result);
-            throw new \RuntimeException($errors);
+            throw new \RuntimeException("Не смог получить аттач изображения");
         }
         
         if(isset($attachment[0]))
         {
           $attachment = $attachment[0];
         }else{
-            $errors = sprintf("params_for_getting_upload_server: %s\nupload_response: %s\nupload_url: %s\nresponse: %s", json_encode($params_photo, true), json_encode($uploadData, true), $upload_url, $result);
-            throw new \RuntimeException($errors);
-            //$this->upload_photo($file, $flag_user, $flag_person, ($retry+1), $errors);
-            //throw new \RuntimeException($errors);
-//            while(!isset($attachment)){
-//            $attachment = $this->{$method}("photos.saveMessagesPhoto", array("photo"=>$res['photo'], "server"=>$res['server'], "hash"=>$res['hash']));
-//            }
-//            $attachment = $attachment[0];
+            throw new \RuntimeException("Не смог получить аттач изображения по индексу");
         }
 
         $attachment_vk = "photo".$attachment['owner_id']."_".$attachment['id'];
