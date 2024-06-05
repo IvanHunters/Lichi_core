@@ -70,7 +70,7 @@ class Api{
                 throw new \Exception(json_encode($data['error'], JSON_UNESCAPED_UNICODE)."\nТокен:".$this->token_group);
             } else {
                 sleep(3);
-                return $this->CallHowGroup($method,$param, $retry++);
+                return $this->CallHowGroup($method,$param, ($retry++));
             }
         }
         return is_array($data['response']) ? $data['response'] : [$data['response']];
