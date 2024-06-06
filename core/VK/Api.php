@@ -66,12 +66,7 @@ class Api{
         $data = $this->curl("https://api.vk.com/method/$method?v=5.199", $param);
         $i = 0;
         if(isset($data['error'])){
-            if ($retry === 3) {
-                throw new \Exception(json_encode($data['error'], JSON_UNESCAPED_UNICODE)."\nТокен:".$this->token_group);
-            } else {
-                sleep(3);
-                return $this->CallHowGroup($method,$param, ($retry++));
-            }
+            throw new \RuntimeException(json_encode($data['error'], JSON_UNESCAPED_UNICODE));
         }
         return is_array($data['response']) ? $data['response'] : [$data['response']];
     }
