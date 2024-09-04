@@ -32,17 +32,16 @@ class Callback extends Api
 
         if(isset($data["callback_query"])) $this->method_require = "keyboard_message";
         elseif(isset($data['message'])) $this->method_require = "message";
-        else{
-            print_r($this);
-            die("\nFor Debug");
-        }
-
-        if (isset($data['pre_checkout_query'])){
+        elseif (isset($data['pre_checkout_query'])){
             $paymentData = $data['pre_checkout_query'];
             $this->CallHowGroup("answerPreCheckoutQuery", [
                 'ok' => true,
                 'pre_checkout_query_id' => $paymentData['id']
             ]);
+            die("ok");
+        }else{
+            print_r($this);
+            die("\nFor Debug");
         }
 
         if($this->method_require == "message"){
