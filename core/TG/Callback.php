@@ -37,6 +37,14 @@ class Callback extends Api
             die("\nFor Debug");
         }
 
+        if (isset($data['pre_checkout_query'])){
+            $paymentData = $data['pre_checkout_query'];
+            $this->CallHowGroup("answerPreCheckoutQuery", [
+                'ok' => true,
+                'pre_checkout_query_id' => $paymentData['id']
+            ]);
+        }
+
         if($this->method_require == "message"){
             $this->message                  = @$this->data["message"];
             $this->message_id               = @$this->message['message']['message_id'];
