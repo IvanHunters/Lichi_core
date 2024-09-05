@@ -20,7 +20,9 @@ trait Message
         }
 
         $other_param['text'] = $message;
-        $other_param['parse_mode'] = 'MarkdownV2';
+        if (!isset($other_param['parse_mode'])) {
+            $other_param['parse_mode'] = 'MarkdownV2';
+        }
         $other_param['disable_web_page_preview'] = true;
         if(isset($other_param['attachment'])){
             switch($this->type_upload){
