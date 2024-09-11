@@ -36,7 +36,7 @@ class Callback extends Api
         $this->client_info      = @$this->data->object->client_info;
         $this->chat_id          = is_null(@$data->object->message->from_id) ? @$data->object->user_id : @$data->object->message->from_id;
         $this->user_id          = is_null(@$data->object->message->peer_id) ? @$data->object->user_id : @$data->object->message->peer_id;
-        $this->username         = @$this->CallHowGroup("users.get", array("user_ids"=>$this->user_id))[0]['first_name'];
+        $this->username         = '';
         $this->group_id         = @$data->group_id;
         $this->message_id       = @$data->object->message->id;
         $this->realData       = json_decode($req, true);
@@ -131,5 +131,43 @@ class Callback extends Api
       return $this->CallHowGroup('groups.deleteCallbackServer',
                                       [ "group_id"=>$group_id,
                                         "server_id"=>$server_id ]);
+    }
+
+    public function getBetterImageUrl(int $index = 0, $maxWidth = null, $maxHeight = null): string
+    {
+        $attachments = $this->attachments_data ?? [];
+        $url_image = '';
+        if (count($attachments) === 0) {
+            return '';
+        }
+        if (count($attachments) > 1 && isset($attachments[$index])) {
+            $attachment = $attachments[$index];
+        } else {
+            $attachment = $attachments[0];
+        }
+
+        if (!isset($attachment['photo'])) {
+            throw new \RuntimeException("attach must have a photo type!");
+        }
+
+        usort($attachment['photo'], function ($item1, $item2) {
+            return $item2['height'] <=> $item1['height'];
+        });
+        foreach($attachment['photo'] as $photo) {
+            if (!is_null($maxWidth) && $photo['width'] <= $maxWidth) {
+                $url_image = $photo['url'];
+                break;
+            } elseif (!is_null($maxHeight) && $photo['height'] <= $maxHeight) {
+                $url_image = $photo['url'];
+                break;
+            } elseif(!is_null($maxWidth) || !is_null($maxHeight)) {
+                continue;
+            } else {
+                $url_image = $photo['url'];
+                break;
+            }
+        }
+
+        return $url_image;
     }
 }

@@ -20,5 +20,10 @@
             "Lichi\\VB\\": "core/VB/",
             "Lichi\\ICQ\\": "core/ICQ/"
         }
+    },
+    "require": {
+        "illuminate/support": "^8.83",
+        "ramsey/uuid": "^4.2",
+        "ext-json": "*"
     }
 }

@@ -72,11 +72,6 @@ class Callback extends Api
         $this->chat_id                      = $this->message["chat"]["id"];
         if ($this->user_id == $this->chat_id) {
             $this->type_event                   = "message_new";
-        } else {
-            // $this->type_event                   = "message_new";
-            // $this->not_keyboard                 = true;
-            // $this->chat_id                      = $this->message["chat"]["id"];
-            // $this->user_id                      = $this->message["chat"]["id"];
         }
         $this->attachments_data_last = false;
         $this->attachments_data = false;
@@ -88,7 +83,6 @@ class Callback extends Api
             } else {
                 $videos = $this->data["message"]["reply_to_message"]['video'];
             }
-            $videos['url'] = $this->getImage($videos['file_id']);
             $this->attachments_data['video'][] = $this->attachments_data_last['video'][0] = $videos;
         }
         if (isset($this->data["message"]['photo']) || isset($this->data["message"]["reply_to_message"]['photo'])) {
@@ -99,7 +93,6 @@ class Callback extends Api
                 $photos = $this->data["message"]["reply_to_message"]['photo'];
             }
             foreach ($photos as $photo) {
-                $photo['url'] = $this->getImage($photo['file_id']);
                 $this->attachments_data['photo'][] = $this->attachments_data_last['photo'][0] = $photo;
             }
         }
@@ -113,5 +106,40 @@ class Callback extends Api
         $data = $this->curl("https://api.telegram.org/bot{$this->token}/setWebhook", array("url"=>$url));
 
         return $data;
+    }
+
+    public function getBetterImageUrl(int $index = 0, $maxWidth = null, $maxHeight = null): string
+    {
+        $attachments = $this->attachments_data ?? [];
+        $url_image = '';
+        if (count($attachments) === 0) {
+            return '';
+        }
+
+        if (!isset($attachments['photo'])) {
+            throw new \RuntimeException("attach must have a photo type!");
+        }
+
+        $attachment = $attachments['photo'];
+
+        usort($attachment, function ($item1, $item2) {
+            return $item2['height'] <=> $item1['height'];
+        });
+        foreach($attachment as $photo) {
+            if (!is_null($maxWidth) && $photo['width'] <= $maxWidth) {
+                $url_image = $this->getImage($photo['file_id']);
+                break;
+            } elseif (!is_null($maxHeight) && $photo['height'] <= $maxHeight) {
+                $url_image = $this->getImage($photo['file_id']);
+                break;
+            } elseif(!is_null($maxWidth) || !is_null($maxHeight)) {
+                continue;
+            } else {
+                $url_image = $this->getImage($photo['file_id']);
+                break;
+            }
+        }
+
+        return $url_image;
     }
 }

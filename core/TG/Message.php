@@ -6,6 +6,7 @@ trait Message
     public $file_upload = false;
     public function message_send($message = "", $other_param = array(), $flag_user = false){
 
+        $response = null;
         if(is_array($message) || is_object($message)){
           $message = var_export($message, true);
         }
@@ -43,13 +44,7 @@ trait Message
                     $response = $this->document_send($other_param);
                 break;
             }
-        }else{
-            // if(!is_null($this->message_id)){
-            //     $other_param["message_id"] = $this->message_id;
-            //     $response = $this->callApi("editMessageText", $other_param);
-            // }else{
                 $response = $this->callApi("sendMessage", $other_param);
-            //}
         }
         return $response;
     }
