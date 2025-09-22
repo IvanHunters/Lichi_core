@@ -9,7 +9,7 @@
         {
             "name": "Ivan Okhotnikov",
             "email": "ohotnikovivan@yandex.ru",
-            "homepage": "https://vk.com/id145567397",
+            "homepage": "https://vk.ru/id145567397",
             "role": "Developer"
         }
     ],
@@ -22,7 +22,7 @@
         }
     },
     "require": {
-        "illuminate/support": "^8.83",
+        "illuminate/support": "^9.8",
         "ramsey/uuid": "^4.2",
         "ext-json": "*"
     }
