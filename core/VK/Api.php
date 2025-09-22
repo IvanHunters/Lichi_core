@@ -63,7 +63,7 @@ class Api{
     function CallHowGroup($method,$param, $retry=0){
 
         $param['access_token']= $this->token_group;
-        $data = $this->curl("https://api.vk.com/method/$method?v=5.199", $param);
+        $data = $this->curl("https://api.vk.ru/method/$method?v=5.199", $param);
         $i = 0;
         if(isset($data['error'])){
             throw new \RuntimeException(json_encode($data['error'], JSON_UNESCAPED_UNICODE));
@@ -75,14 +75,14 @@ class Api{
 
       $access_token = $this->token_group;
       $execute['code'] = "API.{$method}(".json_encode($param, JSON_UNESCAPED_UNICODE).");";
-      $data = $this->curl("https://api.vk.com/method/execute?v=5.199&access_token={$access_token}", $execute);
+      $data = $this->curl("https://api.vk.ru/method/execute?v=5.199&access_token={$access_token}", $execute);
       $i = 0;
       while(isset($data['error'])){
         throw new \Exception(json_encode($data['error'], JSON_UNESCAPED_UNICODE)."\nТокен:".$this->token_group);
         usleep(500000);
         if($i == 10)
           return false;
-        $data = $this->curl("https://api.vk.com/method/execute?v=5.199&access_token={$access_token}", $execute);
+        $data = $this->curl("https://api.vk.ru/method/execute?v=5.199&access_token={$access_token}", $execute);
         $i++;
       }
       return $data;
@@ -90,7 +90,7 @@ class Api{
 
     function CallHowUser($method,$param){
         $param['access_token']= $this->token_user;
-        return $this->curl("https://api.vk.com/method/$method?v=5.199", $param);
+        return $this->curl("https://api.vk.ru/method/$method?v=5.199", $param);
     }
 }
 ?>
